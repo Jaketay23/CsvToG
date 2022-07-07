@@ -97,6 +97,7 @@ def collapse_IPS(array):
 #Default Value: 15 Seconds
 def XP_New(Stime, CTime):
     global xp_counter, starting_time, current_time, vertex_number, dest_ips
+    print(CTime)
     if ((int(CTime) - int(Stime)) >= 15):
         Stime = current_time
         outputFile.write("XP # " + str(xp_counter) + "  // Stime Tag: " + str(current_time) + "  \n")

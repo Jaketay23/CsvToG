@@ -21,14 +21,14 @@ outputFileName = "/home/jaketay/Research/data/MIDAS_test/MIDAS_Test.csv"
 import pandas as pandasForSortingCSV
 
 # assign dataset
-csvData = pandasForSortingCSV.read_csv(filename, dtype='unicode')
+csvData = pandasForSortingCSV.read_csv(filename)
 
-# # sort data frame
-# csvData.sort_values(["Time"],
-#                     axis=0,
-#                     ascending=[True],
-#                     inplace=True)
-#
+# sort data frame
+csvData.sort_values(["Time"],
+                    axis=0,
+                    ascending=[True],
+                    inplace=True)
+
 
 # # sort data frame
 # csvData.sort_values(["Stime"],
@@ -71,11 +71,9 @@ with open(filename, newline='', encoding='latin1') as rows:
          value = row['Time']  ##
          # value = row['Stime']  ##
          value = value[:value.find('.')]
-         # # print(value)
-         val = int(value) / 15
          # #
          # #
-         # #importing the datetime package
+         #importing the datetime package
          # import datetime
          #
          # # given epoch time
@@ -88,8 +86,8 @@ with open(filename, newline='', encoding='latin1') as rows:
          # datetime_str = mytimestamp.strftime("%Y - %m - %d  %H : %M : %S")
 
          if value != "":
-             out.write(value)
-             # out.write(datetime_str)
+             out.write(str(value))
+             #out.write(datetime_str)
              out.write(',')
 
          value = row['Label']  ##

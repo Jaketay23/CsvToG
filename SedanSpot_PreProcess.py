@@ -32,16 +32,16 @@ with open(filename, newline='', encoding='latin1') as rows:
          value = row['Stime']
 
          #IoT
-         #value = value[-12:-10]
+         value = value[21:]
 
-         #DARPA
-         value = value[:-6]
-         if (value in values):
-            value = values.index(value)
-         else:
-            values.append(value)
-            value = count
-            count += 1
+         # #DARPA
+         # value = value[:-6]
+         # if (value in values):
+         #    value = values.index(value)
+         # else:
+         #    values.append(value)
+         #    value = count
+         #    count += 1
 
 
          Sedan.write(str(value))

@@ -5,7 +5,7 @@ import glob
 import os.path
 
 
-filename = "/home/jaketay/Research/data/MIDAS_test/MIDAS_Test.csv"
+filename = "/home/kali/Research/data/MIDAS_test/MIDAS_Test.csv"
 for f in glob.glob("*.g"):
     os.remove(f)
 
@@ -88,20 +88,20 @@ def dest_check(dest, ips):
     return val_check
 
 
-#Label Node for Destination IP for Better Anomaly Recogniton by GBAD
-def item_type(dest_ip):
-    system = ""
-    if (dest_ip.startswith("192")):
-        system = "Workstation"
-    elif (dest_ip.startswith("222")):
-        system = "External"
-    else:
-        system = "Other"
-    return system
+# #Label Node for Destination IP for Better Anomaly Recogniton by GBAD
+# def item_type(dest_ip):
+#     system = ""
+#     if (dest_ip.startswith("192")):
+#         system = "Workstation"
+#     elif (dest_ip.startswith("222")):
+#         system = "External"
+#     else:
+#         system = "Other"
+#     return system
 
 
 #Label Node for First Octet for Better Anomaly Recogniton by GBAD
-def last_octet_item_type(src_IP):
+def item_type(src_IP):
     system = ""
     if (src_IP.startswith("192") and src_IP.endswith("13")):
         system = "Sichuani"
@@ -117,10 +117,12 @@ def last_octet_item_type(src_IP):
         system = "Partron"
     elif (src_IP.startswith("192") and src_IP.endswith("25")):
         system = "Broadcast"
-    elif (src_IP.startswith("222") and src_IP.endswith("0")):
-        system = "Bogus IP"
-    elif (src_IP.startswith("222")):
+    elif (src_IP.startswith('192')):
+        system = "Workstation"
+    elif (src_IP.startswith("222") and src_IP.startswith("111")):
         system = "External"
+    elif (src_IP.startswith("210.89")):
+        system = "Mirai HTTP"
     else:
         system = "Other"
     return system
@@ -139,20 +141,22 @@ def set_Up_Relationship(file, array, dest_ips):
 
     src_ip_array = []
     counter = 0
-    ##print(array)
-    ###print(len(array))
+
 
     #For Loop to Traverse through values in Array
     for i in array:
             #print(i)
+            if("." not in array[counter][1]):
+                print(array[counter][1])
+                array[counter][1] = "192.169.0.13"
 
             #Create Vertice and Connection of Sender Nodes
             outputFile.write('v ')
             outputFile.write(str(vertex_number))
             outputFile.write(' ')
             outputFile.write('\"')
-            src_type = last_octet_item_type(array[counter][1])
-            outputFile.write(src_type)
+            #src_type = item_type(array[counter][1])
+            outputFile.write("Sender")
             #outputFile.write(array[counter][1])
             outputFile.write('\"')
             outputFile.write('\n')
@@ -169,93 +173,98 @@ def set_Up_Relationship(file, array, dest_ips):
             outputFile.write(' ')
             outputFile.write("\"" + str(array[counter][2]) + "\"\n")
             #
-            # #Split up IP Address Nodes
-            # src_ip_array.append(array[counter][1].split('.', 3))
-            # src_node_vertex = vertex_number
-            #
-            #
-            # #First Octet Vertice
-            # outputFile.write('v ')
-            # outputFile.write(str(vertex_number))
-            # outputFile.write(' ')
-            # outputFile.write('\"')
-            # first_octype = item_type(src_ip_array[counter][0])
-            # outputFile.write(first_octype)
-            # outputFile.write('\"')
-            # outputFile.write('\n')
-            # target_vertex = vertex_number
-            # vertex_number += 1
-            #
-            # #Relationship to First Octet
-            # outputFile.write(directed_edge)
-            # outputFile.write(' ')
-            # outputFile.write(str(target_vertex))  ##
-            # outputFile.write(' ')
-            # outputFile.write(str(target_vertex - 1))
-            # outputFile.write(' ')
-            # outputFile.write("\"First Octet\"\n")
+            #Split up IP Address Nodes
+            src_ip_array.append(array[counter][1].split('.', 3))
+            src_node_vertex = vertex_number - 1
 
-            # # Second Octet Vertice
-            # outputFile.write('v ')
-            # outputFile.write(str(vertex_number))
-            # outputFile.write(' ')
-            # outputFile.write('\"')
-            # ##print(src_ip_array[counter])
-            # outputFile.write(src_ip_array[counter][1])
-            # outputFile.write('\"')
-            # outputFile.write('\n')
-            # target_vertex = vertex_number
-            # vertex_number += 1
-            # #
-            # #Relationship to the Second Octet
-            # outputFile.write(directed_edge)
-            # outputFile.write(' ')
-            # outputFile.write(str(target_vertex))  ##
-            # outputFile.write(' ')
-            # outputFile.write(str(src_node_vertex))
-            # outputFile.write(' ')
-            # outputFile.write("\"Second Octet\"\n")
-            # #
-            # # Third Octet Vertice
-            # outputFile.write('v ')
-            # outputFile.write(str(vertex_number))
-            # outputFile.write(' ')
-            # outputFile.write('\"')
-            # outputFile.write(src_ip_array[counter][2])
-            # outputFile.write('\"')
-            # outputFile.write('\n')
-            # target_vertex = vertex_number
-            # vertex_number += 1
-            #
-            # #Relationship to Third Octet
-            # outputFile.write(directed_edge)
-            # outputFile.write(' ')
-            # outputFile.write(str(target_vertex))  ##
-            # outputFile.write(' ')
-            # outputFile.write(str(src_node_vertex))
-            # outputFile.write(' ')
-            # outputFile.write("\"Third Octet\"\n")
 
-            # # Fourth Octet Vertice
-            # outputFile.write('v ')
-            # outputFile.write(str(vertex_number))
-            # outputFile.write(' ')
-            # outputFile.write('\"')
-            # value = last_octet_item_type(src_ip_array[counter][0], src_ip_array[counter][3])
-            # outputFile.write(value)
-            # outputFile.write('\"')
-            # outputFile.write('\n')
-            # target_vertex = vertex_number
-            # vertex_number += 1
+            #First Octet Vertice
+            outputFile.write('v ')
+            outputFile.write(str(vertex_number))
+            outputFile.write(' ')
+            outputFile.write('\"')
+            #first_octype = item_type(src_ip_array[counter][0])
+            outputFile.write(src_ip_array[counter][0])
+            outputFile.write('\"')
+            outputFile.write('\n')
+            target_vertex = vertex_number
+            vertex_number += 1
+
+            #Relationship to First Octet
+            outputFile.write(directed_edge)
+            outputFile.write(' ')
+            outputFile.write(str(target_vertex))  ##
+            outputFile.write(' ')
+            # destination = dest_check(array[counter][0], dest_ips)
+            # outputFile.write(str(destination))
+            sender_v = src_node_vertex
+            outputFile.write(str(sender_v))
+            outputFile.write(' ')
+            # outputFile.write("\"" + str(array[counter][2]) + "\"\n")
+            outputFile.write("\"First Octet\"\n")
+
+            # Second Octet Vertice
+            outputFile.write('v ')
+            outputFile.write(str(vertex_number))
+            outputFile.write(' ')
+            outputFile.write('\"')
+            ##print(src_ip_array[counter])
+            #print(src_ip_array[counter])
+            outputFile.write(src_ip_array[counter][1])
+            outputFile.write('\"')
+            outputFile.write('\n')
+            target_vertex = vertex_number
+            vertex_number += 1
             #
-            # #Relationship to the Fourth Octet
-            # outputFile.write(directed_edge)
-            # outputFile.write(' ')
-            # outputFile.write(str(target_vertex))  ##
-            # outputFile.write(' ')
-            # outputFile.write(str(src_node_vertex))
-            # outputFile.write(' ')
-            # outputFile.write("\"Fourth Octet\"\n")
+            #Relationship to the Second Octet
+            outputFile.write(directed_edge)
+            outputFile.write(' ')
+            outputFile.write(str(target_vertex))  ##
+            outputFile.write(' ')
+            outputFile.write(str(src_node_vertex))
+            outputFile.write(' ')
+            outputFile.write("\"Second Octet\"\n")
+            #
+            # Third Octet Vertice
+            outputFile.write('v ')
+            outputFile.write(str(vertex_number))
+            outputFile.write(' ')
+            outputFile.write('\"')
+            outputFile.write(src_ip_array[counter][2])
+            outputFile.write('\"')
+            outputFile.write('\n')
+            target_vertex = vertex_number
+            vertex_number += 1
+
+            #Relationship to Third Octet
+            outputFile.write(directed_edge)
+            outputFile.write(' ')
+            outputFile.write(str(target_vertex))  ##
+            outputFile.write(' ')
+            outputFile.write(str(src_node_vertex))
+            outputFile.write(' ')
+            outputFile.write("\"Third Octet\"\n")
+
+            # Fourth Octet Vertice
+            outputFile.write('v ')
+            outputFile.write(str(vertex_number))
+            outputFile.write(' ')
+            outputFile.write('\"')
+            #value = last_octet_item_type(src_ip_array[counter][0], src_ip_array[counter][3])
+            outputFile.write(src_ip_array[counter][3])
+            outputFile.write('\"')
+            outputFile.write('\n')
+            target_vertex = vertex_number
+            vertex_number += 1
+
+            #Relationship to the Fourth Octet
+            outputFile.write(directed_edge)
+            outputFile.write(' ')
+            outputFile.write(str(target_vertex))  ##
+            outputFile.write(' ')
+            outputFile.write(str(src_node_vertex))
+            outputFile.write(' ')
+            outputFile.write("\"Fourth Octet\"\n")
 
 
 
@@ -279,7 +288,9 @@ def name_to_IP(value):
         value = "192.168.0.125"
     elif (value.startswith("a8")):
         value = ip_dict["Apple_0e:3f:54"]
-    elif (value.startswith("fb") or value.startswith("fc") or value.startswith("05")): #Bogus IPs
+    elif (value.startswith("6e") or value.startswith("e8")):
+        value = "111.0.0.0"
+    elif (value.startswith("fb") or value.startswith("fc") or value.startswith("05") or value.startswith("3c") or value.startswith("96")): #Bogus IPs
         value = "222.0.0.0"
     return value
 
@@ -288,7 +299,7 @@ outputFile = open("DDoSGraph.g", "w")
 
 
 #Limit Values for Quicker Testing
-N = 159000
+N = 1000000
 
 src_counter = 0
 
@@ -360,8 +371,9 @@ with open(filename, newline='', encoding='latin1') as rows:
                          outputFile.write(str(vertex_number))
                          outputFile.write(' ')
                          outputFile.write('\"')
-                         sysType = item_type(value)
-                         outputFile.write(sysType)
+                         #sysType = item_type(value)
+                         #outputFile.write(sysType)
+                         outputFile.write(value)
                          outputFile.write('\"')
                          outputFile.write("\t// " + value)
                          outputFile.write('\n')

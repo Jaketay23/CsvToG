@@ -1,22 +1,11 @@
-import sys
-import re
 import csv
-
-import pandas as pd
-import time
-import os
-import glob
-import os.path
-from os import path
-import datetime
 
 anomaly_count = 0
 
-filename = "/home/jaketay/Research/data/MIDAS_test/MIDAS_Test.csv"
-#filename = "/home/jaketay/Research/MIDAS/"
+filename = "/home/kali/Research/data/MIDAS_test/MIDAS_Test.csv"
 
 
-Sedan = open("/home/jaketay/Desktop/sedanspot-master/example/sd1.csv", 'w')
+Sedan = open("/home/kali/Research/sedanspot/example/sd1.csv", 'w')
 values = []
 count = 0
 
@@ -28,11 +17,8 @@ with open(filename, newline='', encoding='latin1') as rows:
       for row in row_reader:
          gtd_list.append(dict(row))
 
-         # value = row['Flow Duration']  ##
          value = row['Stime']
 
-         #IoT
-         value = value[21:]
 
          # #DARPA
          # value = value[:-6]
